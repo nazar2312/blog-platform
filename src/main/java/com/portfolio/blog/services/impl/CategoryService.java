@@ -1,6 +1,7 @@
 package com.portfolio.blog.services.impl;
 
 import com.portfolio.blog.domain.dto.Category;
+import com.portfolio.blog.domain.dto.CreateCategoryRequest;
 import com.portfolio.blog.domain.entities.CategoryEntity;
 import com.portfolio.blog.mappers.CategoryMapper;
 import com.portfolio.blog.repositories.CategoryRepository;
@@ -46,34 +47,13 @@ public class CategoryService implements CategoryServiceInterface {
     }
 
     @Override
-    public Category createCategory(Category category) {
-        
-        if(category.id() != null) throw new IllegalArgumentException("ID must not be provided.");
-        if(category.name() == null) throw new IllegalArgumentException("Name must be provided");
+    public Category createCategory(CreateCategoryRequest category) {
 
-        return mapper.toDto(
-                repository.save(mapper.toEntity(category))
-        );
-    }
+        Category categoryDto = mapper.fromRequestToDto(category);
+        CategoryEntity categoryEntity = repository.save(mapper.toEntity(categoryDto));
 
-    @Override
-    public Category updateCategory(UUID id, Category category) {
-        /*
-            First, making sure that provided category match to the requirements;
-            Then checking if category to update is actually persists in database;
-            Update all fields and save to database;
-         */
-        if(category.id() != null) throw new IllegalArgumentException("ID must not be provided.");
-        if(category.name() == null) throw new IllegalArgumentException("Name must be provided");
+        return mapper.toDto(categoryEntity);
 
-        Optional<CategoryEntity> toUpdate = repository.findById(id);
-        if(toUpdate.isEmpty()) throw new EntityNotFoundException("Category does not exists, please provide different ID");
-
-        toUpdate.get().setName(category.name());
-        
-        return mapper.toDto(
-                repository.save(toUpdate.get())
-        );
     }
 
     @Override

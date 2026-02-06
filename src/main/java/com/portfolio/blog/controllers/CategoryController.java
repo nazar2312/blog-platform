@@ -1,7 +1,9 @@
 package com.portfolio.blog.controllers;
 
 import com.portfolio.blog.domain.dto.Category;
+import com.portfolio.blog.domain.dto.CreateCategoryRequest;
 import com.portfolio.blog.services.impl.CategoryService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,27 +35,18 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<Category> createCategory(@RequestBody Category category) {
+    public ResponseEntity<Category> createCategory(
+            @Valid @RequestBody CreateCategoryRequest category) {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(service.createCategory(category));
     }
 
-    @PatchMapping(path = "/api/{category_id}")
-    public ResponseEntity<Category> updateCategory(
-            @PathVariable UUID category_id,
-            @RequestBody Category category) {
-
-        return ResponseEntity.ok(
-                service.updateCategory(category_id, category)
-        );
-    }
-
     @DeleteMapping(path = "/api/{category_id}/")
-    public ResponseEntity<Category> deleteCategory( @PathVariable UUID category_id) {
+    public ResponseEntity<Void> deleteCategory( @PathVariable UUID category_id) {
 
         service.deleteCategory(category_id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        return ResponseEntity.noContent().build();
     }
 
 }
