@@ -1,6 +1,7 @@
 package com.portfolio.blog.controllers;
 
 import com.portfolio.blog.domain.dto.ApiErrorResponse;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class ErrorController {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ApiErrorResponse> handleIllegalArgException(IllegalArgumentException ex) {
+    public ResponseEntity<ApiErrorResponse> handleIllegalArg(IllegalArgumentException ex) {
 
         log.error(ex.getMessage());
 
@@ -41,7 +42,7 @@ public class ErrorController {
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ApiErrorResponse> handleBadCredentialsException(BadCredentialsException ex) {
+    public ResponseEntity<ApiErrorResponse> handleBadCredentials(BadCredentialsException ex) {
 
         log.error(ex.getMessage());
 
@@ -51,5 +52,15 @@ public class ErrorController {
                 .build();
 
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+    }
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleEntityNotFound(EntityNotFoundException ex) {
+
+        log.error(ex.getMessage());
+        ApiErrorResponse response = ApiErrorResponse.builder()
+                .status(HttpStatus.NOT_FOUND.value())
+                .message("Data is not found")
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 }

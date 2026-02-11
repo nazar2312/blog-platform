@@ -1,7 +1,5 @@
 package com.portfolio.blog.config;
 
-import com.portfolio.blog.repositories.UserRepository;
-import com.portfolio.blog.security.BlogUserDetailsService;
 import com.portfolio.blog.security.JwtAuthenticationFilter;
 import com.portfolio.blog.services.AuthenticationServiceInterface;
 import org.springframework.context.annotation.Bean;
@@ -10,8 +8,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -21,8 +19,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
     Spring security configuration;
  */
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
-
 
     @Bean
     public SecurityFilterChain securityFilterChain(
@@ -59,11 +57,6 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) {
         return configuration.getAuthenticationManager();
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService(UserRepository repo){
-        return new BlogUserDetailsService(repo);
     }
 
 }

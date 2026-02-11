@@ -36,8 +36,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             );
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
-        } catch (Exception e) {
+        } catch (Exception ex) {
             //unauthorized i guess
+            log.warn("Invalid/Expired token was received");
+            log.warn(ex.getMessage());
         }
         filterChain.doFilter(request, response);
 
