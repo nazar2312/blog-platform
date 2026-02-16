@@ -4,9 +4,11 @@ import com.portfolio.blog.services.AuthenticationServiceInterface;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -48,6 +50,15 @@ public class AuthenticationService implements AuthenticationServiceInterface {
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
+    @Override
+    public String extractToken(HttpServletRequest request) {
+
+        String bearerToken = request.getHeader("Authorization");
+
+        if(bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        } else throw new BadCredentialsException("Jwt token wasn't provided");
+    }
 
     @Override
     public UserDetails validateToken(String token) {
@@ -55,6 +66,7 @@ public class AuthenticationService implements AuthenticationServiceInterface {
         return userDetailsService.loadUserByUsername(username);
     }
 
+    @Override
     public String extractUsername (String token) {
 
         //  Throws exception in case if token isn't valid;

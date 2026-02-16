@@ -1,10 +1,10 @@
 package com.portfolio.blog.mappers;
 
-import com.portfolio.blog.domain.dto.Category;
-import com.portfolio.blog.domain.dto.CreateCategoryRequest;
+import com.portfolio.blog.domain.dto.category.Category;
+import com.portfolio.blog.domain.dto.category.CategoryRequest;
 import com.portfolio.blog.domain.entities.CategoryEntity;
 import com.portfolio.blog.domain.entities.PostEntity;
-import com.portfolio.blog.domain.entities.StatusEntity;
+import com.portfolio.blog.domain.entities.Status;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -20,7 +20,9 @@ public interface CategoryMapper {
 
     CategoryEntity toEntity(Category category);
 
-    Category fromRequestToDto(CreateCategoryRequest request);
+    Category fromRequestToDto(CategoryRequest request);
+
+    CategoryEntity fromRequestToEntity(CategoryRequest request);
 
     @Named("calculatePostCount")
     default long calculatePostCount(List<PostEntity> posts) {
@@ -29,9 +31,10 @@ public interface CategoryMapper {
             if(null == posts) return 0;
         }
         return posts.stream()
-                .filter(post -> StatusEntity.PUBLISHED.equals(post.getStatus()))
+                .filter(post -> Status.PUBLISHED.equals(post.getStatus()))
                 .count();
     }
+
 
 
 }

@@ -1,9 +1,7 @@
 package com.portfolio.blog.domain.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -13,7 +11,8 @@ import java.util.UUID;
 @Table(name = "posts")
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 public class PostEntity {
 
     @Id
@@ -30,16 +29,16 @@ public class PostEntity {
     @Column(nullable = false, updatable = false)
     private LocalDateTime created;
 
+    @Column(nullable = false)
+    private LocalDateTime updated;
+
     @PrePersist
     protected void onCreate() {
 
         this.created = LocalDateTime.now();
         this.updated = LocalDateTime.now();
+        this.readingTime = content.length() / 10;
     }
-
-    @Column(nullable = false)
-    private LocalDateTime updated;
-
     @PreUpdate
     protected void onUpdate() {
 
@@ -53,7 +52,7 @@ public class PostEntity {
     private UserEntity author;
 
     @Column(nullable = false)
-    private StatusEntity status;
+    private Status status;
 
     @Column(nullable = false)
     private Integer readingTime;

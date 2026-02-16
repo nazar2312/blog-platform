@@ -1,7 +1,7 @@
 package com.portfolio.blog.controllers;
 
-import com.portfolio.blog.domain.dto.Category;
-import com.portfolio.blog.domain.dto.CreateCategoryRequest;
+import com.portfolio.blog.domain.dto.category.Category;
+import com.portfolio.blog.domain.dto.category.CategoryRequest;
 import com.portfolio.blog.services.impl.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -36,7 +36,7 @@ public class CategoryController {
 
     @PostMapping
     public ResponseEntity<Category> createCategory(
-            @Valid @RequestBody CreateCategoryRequest category) {
+            @Valid @RequestBody CategoryRequest category) {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(service.createCategory(category));

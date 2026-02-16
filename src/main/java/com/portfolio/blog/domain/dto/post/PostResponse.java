@@ -1,9 +1,8 @@
-package com.portfolio.blog.domain.dto.postDto;
+package com.portfolio.blog.domain.dto.post;
 
-import com.portfolio.blog.domain.dto.User;
-import com.portfolio.blog.domain.entities.CategoryEntity;
-import com.portfolio.blog.domain.entities.StatusEntity;
-import com.portfolio.blog.domain.entities.TagEntity;
+import com.portfolio.blog.domain.dto.Tag;
+import com.portfolio.blog.domain.dto.user.UserResponse;
+import com.portfolio.blog.domain.entities.Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,10 +19,10 @@ import java.util.UUID;
 public class PostResponse {
     UUID id;
     String title;
+    UserResponse user;
     LocalDateTime created;
-    User user;
-    StatusEntity status;
+    Status status;
     Integer readingTime;
-    CategoryEntity categories;
-    Set<TagEntity> tags;
+    String categoryName;
+    Set<Tag> tags;
 }

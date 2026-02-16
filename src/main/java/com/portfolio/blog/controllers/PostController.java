@@ -1,7 +1,7 @@
 package com.portfolio.blog.controllers;
 
-import com.portfolio.blog.domain.dto.postDto.PostRequest;
-import com.portfolio.blog.domain.dto.postDto.PostResponse;
+import com.portfolio.blog.domain.dto.post.PostRequest;
+import com.portfolio.blog.domain.dto.post.PostResponse;
 import com.portfolio.blog.services.impl.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -44,14 +44,16 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<PostResponse> create(@RequestBody PostRequest request) {
-        return null;
+        PostResponse response = service.create(request);
+        return ResponseEntity.ok().body(response);
     }
 
     public ResponseEntity<PostResponse> update() {
         return null;
     }
 
-    public ResponseEntity<PostResponse> delete() {
-        return null;
+    public ResponseEntity<PostResponse> delete(@RequestBody UUID id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

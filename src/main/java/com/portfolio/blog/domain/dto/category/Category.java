@@ -1,4 +1,4 @@
-package com.portfolio.blog.domain.dto;
+package com.portfolio.blog.domain.dto.category;
 
 import java.util.UUID;
 
