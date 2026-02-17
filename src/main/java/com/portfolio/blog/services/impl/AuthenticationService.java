@@ -81,4 +81,6 @@ public class AuthenticationService implements AuthenticationServiceInterface {
             return bearerToken.substring(7);
         } else throw new BadCredentialsException("Jwt token wasn't provided");
     }
+
+
 }

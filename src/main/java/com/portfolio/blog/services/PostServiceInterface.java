@@ -1,7 +1,7 @@
 package com.portfolio.blog.services;
 
-import com.portfolio.blog.domain.dto.postDto.PostRequest;
-import com.portfolio.blog.domain.dto.postDto.PostResponse;
+import com.portfolio.blog.domain.dto.post.PostRequest;
+import com.portfolio.blog.domain.dto.post.PostResponse;
 
 import java.util.List;
 import java.util.UUID;

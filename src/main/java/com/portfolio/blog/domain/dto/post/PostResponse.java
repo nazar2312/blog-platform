@@ -1,4 +1,4 @@
-package com.portfolio.blog.domain.dto.postDto;
+package com.portfolio.blog.domain.dto.post;
 
 import com.portfolio.blog.domain.dto.user.User;
 import com.portfolio.blog.domain.dto.category.CategoryResponse;
@@ -18,10 +18,11 @@ import java.util.Set;
 @AllArgsConstructor
 public class PostResponse {
     String title;
+    String content;
     LocalDateTime created;
-    User user;
+    User author;
     StatusEntity status;
     Integer readingTime;
-    CategoryResponse categories;
+    CategoryResponse category;
     Set<TagResponse> tags;
 }

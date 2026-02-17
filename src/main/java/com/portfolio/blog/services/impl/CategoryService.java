@@ -47,6 +47,16 @@ public class CategoryService implements CategoryServiceInterface {
     }
 
     @Override
+    public CategoryEntity findCategoryByName(String name) {
+
+        Optional<CategoryEntity> optional = repository.findByName(name);
+
+        if(optional.isEmpty()) throw new EntityNotFoundException("Category does not exists");
+
+        return optional.get();
+    }
+
+    @Override
     public CategoryResponse createCategory(CategoryRequest request) {
 
         CategoryEntity entity = mapper.requestToEntity(request);

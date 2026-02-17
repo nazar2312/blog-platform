@@ -1,4 +1,4 @@
-package com.portfolio.blog.domain.dto.postDto;
+package com.portfolio.blog.domain.dto.post;
 
 import com.portfolio.blog.domain.dto.category.CategoryRequest;
 import com.portfolio.blog.domain.dto.tag.TagRequest;
@@ -18,6 +18,6 @@ public class PostRequest {
     String title;
     String content;
     StatusEntity status;
-    CategoryRequest categories;
+    CategoryRequest category;
     Set<TagRequest> tags;
 }

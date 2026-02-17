@@ -1,12 +1,10 @@
 package com.portfolio.blog.domain.dto.user;
 
-import com.portfolio.blog.domain.entities.PostEntity;
-
-import java.util.List;
+import java.util.UUID;
 
 public record User(
+        UUID id,
         String username,
-        String email,
-        List<PostEntity> posts
+        String email
 ) {
 }
