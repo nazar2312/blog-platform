@@ -1,6 +1,7 @@
 package com.portfolio.blog.mappers;
 
 import com.portfolio.blog.domain.dto.tag.TagRequest;
+import com.portfolio.blog.domain.dto.tag.TagResponse;
 import com.portfolio.blog.domain.entities.TagEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
@@ -9,4 +10,5 @@ import org.mapstruct.ReportingPolicy;
 public interface TagMapper {
 
     TagEntity requestToEntity(TagRequest tag);
+    TagResponse entityToResponse(TagEntity entity);
 }

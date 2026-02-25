@@ -2,6 +2,7 @@ package com.portfolio.blog.services;
 
 import com.portfolio.blog.domain.dto.category.CategoryRequest;
 import com.portfolio.blog.domain.dto.category.CategoryResponse;
+import com.portfolio.blog.domain.dto.post.PostRequest;
 import com.portfolio.blog.domain.entities.CategoryEntity;
 
 import java.util.List;
@@ -14,5 +15,5 @@ public interface CategoryServiceInterface {
      CategoryEntity findCategoryByName(String name);
      CategoryResponse createCategory(CategoryRequest category);
      void deleteCategory(UUID toDelete);
-
+     CategoryEntity verifyCategory(PostRequest request);
 }

@@ -49,8 +49,13 @@ public class PostController {
                 .body(service.create(request));
     }
 
-    public ResponseEntity<PostResponse> update() {
-        return null;
+    @PutMapping("/{post_id}")
+    public ResponseEntity<PostResponse> update(
+            @PathVariable UUID post_id,
+            @RequestBody PostRequest postRequest
+    ) {
+        return ResponseEntity.ok()
+                .body(service.update(post_id, postRequest));
     }
 
     public ResponseEntity<PostResponse> delete() {

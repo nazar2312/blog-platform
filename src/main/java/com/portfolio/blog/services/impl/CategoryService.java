@@ -2,6 +2,7 @@ package com.portfolio.blog.services.impl;
 
 import com.portfolio.blog.domain.dto.category.CategoryResponse;
 import com.portfolio.blog.domain.dto.category.CategoryRequest;
+import com.portfolio.blog.domain.dto.post.PostRequest;
 import com.portfolio.blog.domain.entities.CategoryEntity;
 import com.portfolio.blog.mappers.CategoryMapper;
 import com.portfolio.blog.repositories.CategoryRepository;
@@ -69,6 +70,17 @@ public class CategoryService implements CategoryServiceInterface {
     public void deleteCategory(UUID toDelete) {
 
         repository.deleteById(toDelete);
+    }
+
+    public CategoryEntity verifyCategory(PostRequest request) {
+
+        String name = request.getCategory().getName();
+        if(name == null || name.isBlank()) throw new IllegalArgumentException("Please enter category name");
+
+        Optional<CategoryEntity> category = repository.findByName(name);
+        if(category.isEmpty()) throw new EntityNotFoundException("Category is not verified");
+
+        return category.get();
     }
 
 }

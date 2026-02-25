@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,7 +23,7 @@ public class ErrorController {
 
         ApiErrorResponse response = ApiErrorResponse.builder()
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .message("Something went wrong")
+                .message(ex.getMessage())
                 .build();
 
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -35,7 +36,7 @@ public class ErrorController {
 
         ApiErrorResponse response = ApiErrorResponse.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
-                .message("Provided values are not allowed")
+                .message(ex.getMessage())
                 .build();
 
         return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
@@ -48,7 +49,7 @@ public class ErrorController {
 
         ApiErrorResponse response = ApiErrorResponse.builder()
                 .status(HttpStatus.UNAUTHORIZED.value())
-                .message("Unauthorized, incorrect username or password")
+                .message(ex.getMessage())
                 .build();
 
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
@@ -59,8 +60,19 @@ public class ErrorController {
         log.error(ex.getMessage());
         ApiErrorResponse response = ApiErrorResponse.builder()
                 .status(HttpStatus.NOT_FOUND.value())
-                .message("Data is not found")
+                .message(ex.getMessage())
                 .build();
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiErrorResponse> handleMethodArgNotValid(MethodArgumentNotValidException ex) {
+
+        ApiErrorResponse response = ApiErrorResponse.builder()
+                .status(HttpStatus.BAD_REQUEST.value())
+                .message(ex.getMessage())
+                .build();
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }

@@ -2,14 +2,15 @@ package com.portfolio.blog.services.impl;
 
 import com.portfolio.blog.domain.dto.post.PostRequest;
 import com.portfolio.blog.domain.dto.post.PostResponse;
-import com.portfolio.blog.domain.entities.CategoryEntity;
 import com.portfolio.blog.domain.entities.PostEntity;
 import com.portfolio.blog.mappers.PostMapper;
 import com.portfolio.blog.repositories.PostRepository;
 import com.portfolio.blog.services.CategoryServiceInterface;
 import com.portfolio.blog.services.PostServiceInterface;
+import com.portfolio.blog.services.TagServiceInterface;
 import com.portfolio.blog.services.UserServiceInterface;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,7 @@ public class PostService implements PostServiceInterface {
     private final PostMapper mapper;
     private final UserServiceInterface userService;
     private final CategoryServiceInterface categoryService;
+    private final TagServiceInterface tagService;
 
     @Override
     public List<PostResponse> findAll() {
@@ -58,7 +60,7 @@ public class PostService implements PostServiceInterface {
 
         postEntity.setReadingTime(postEntity.getContent().length() / 2);
 
-        postEntity.setCategory(verifyCategory(request));
+        postEntity.setCategory(categoryService.verifyCategory(request));
 
 
         return mapper.entityToResponse(repository.save(postEntity));
@@ -66,8 +68,26 @@ public class PostService implements PostServiceInterface {
 
 
     @Override
-    public PostResponse update() {
-        return null;
+    @Transactional
+    public PostResponse update(UUID uuid, PostRequest request) {
+
+        Optional<PostEntity> toUpdate = repository.findById(uuid);
+        if(toUpdate.isEmpty())
+            throw new EntityNotFoundException("Post with ID  " + uuid + " does not exist");
+        PostEntity postEntity = toUpdate.get();
+
+        postEntity.setTitle(request.getTitle());
+        postEntity.setContent(request.getContent());
+        postEntity.setStatus(request.getStatus());
+        postEntity.setCategory(
+                categoryService.verifyCategory(request)
+        );
+        postEntity.setTags(
+                tagService.verifyTags(request)
+        );
+
+        return mapper.entityToResponse(
+                repository.save(postEntity));
     }
 
     @Override
@@ -79,14 +99,6 @@ public class PostService implements PostServiceInterface {
         repository.deleteAll();
     }
 
-
-    private CategoryEntity verifyCategory(PostRequest request) {
-
-        String name = request.getCategory().getName();
-        if(name == null || name.isBlank()) throw new IllegalArgumentException("Please enter category name");
-
-        return categoryService.findCategoryByName(name);
-    }
 }
 
 

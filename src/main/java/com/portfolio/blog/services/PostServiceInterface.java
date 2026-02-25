@@ -11,6 +11,6 @@ public interface PostServiceInterface {
     List<PostResponse> findAll();
     PostResponse findOne(UUID id);
     PostResponse create(PostRequest request);
-    PostResponse update();
+    PostResponse update(UUID uuid, PostRequest request);
     void delete();
 }
