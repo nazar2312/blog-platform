@@ -3,7 +3,9 @@ package com.portfolio.blog.controllers;
 import com.portfolio.blog.domain.dto.post.PostRequest;
 import com.portfolio.blog.domain.dto.post.PostResponse;
 import com.portfolio.blog.services.impl.PostService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +17,7 @@ import java.util.UUID;
    GET/{user_id}/posts - posts of specific user
    GET/{post_id}/ - post with specific ID
    GET/{category_id}/posts - posts of specific category
-   GET/{xuser_id}/{category_id}/posts - posts of specific user and specific category
+   GET/{user_id}/{category_id}/posts - posts of specific user and specific category
    GET/{tag_id}/posts - posts with specific tag
 
    POST/posts - create post
@@ -39,11 +41,11 @@ public class PostController {
 
     @GetMapping(path = "/{post_id}")
     public ResponseEntity<PostResponse> findOne(@PathVariable UUID post_id) {
-        return null;
+        return ResponseEntity.ok(service.findOne(post_id));
     }
 
     @PostMapping
-    public ResponseEntity<PostResponse> create(@RequestBody PostRequest request) {
+    public ResponseEntity<PostResponse> create(@Valid @RequestBody PostRequest request) {
 
         return ResponseEntity.ok()
                 .body(service.create(request));
@@ -52,19 +54,32 @@ public class PostController {
     @PutMapping("/{post_id}")
     public ResponseEntity<PostResponse> update(
             @PathVariable UUID post_id,
-            @RequestBody PostRequest postRequest
+            @Valid @RequestBody PostRequest postRequest
     ) {
         return ResponseEntity.ok()
                 .body(service.update(post_id, postRequest));
     }
 
-    public ResponseEntity<PostResponse> delete() {
-        return null;
-    }
+    @DeleteMapping(path = "/{post_id}")
+    public ResponseEntity<PostResponse> delete(@PathVariable UUID post_id) {
 
-    @DeleteMapping(path = "/deleteall")
-    public void deleteAll() {
-        service.deleteAll();
+        service.delete(post_id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

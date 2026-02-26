@@ -16,7 +16,6 @@ import java.util.List;
 public interface CategoryMapper {
 
     @Mapping(target = "postCount", source = "posts", qualifiedByName = "calculatePostCount")
-
     CategoryResponse entityToResponse(CategoryEntity entity);
 
     CategoryEntity requestToEntity(CategoryRequest category);
@@ -24,9 +23,8 @@ public interface CategoryMapper {
     @Named("calculatePostCount")
     default long calculatePostCount(List<PostEntity> posts) {
 
-        {
-            if(null == posts) return 0;
-        }
+        if(null == posts) return 0;
+
         return posts.stream()
                 .filter(post -> StatusEntity.PUBLISHED.equals(post.getStatus()))
                 .count();

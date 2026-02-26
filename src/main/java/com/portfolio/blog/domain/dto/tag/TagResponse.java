@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TagResponse {
     String name;
+    long postCount;
 }

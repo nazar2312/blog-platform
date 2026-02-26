@@ -7,11 +7,13 @@ import com.portfolio.blog.domain.entities.TagEntity;
 import com.portfolio.blog.mappers.TagMapper;
 import com.portfolio.blog.repositories.TagRepository;
 import com.portfolio.blog.services.TagServiceInterface;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -20,11 +22,13 @@ public class TagService implements TagServiceInterface {
     private final TagRepository repository;
     private final TagMapper mapper;
 
+    @Override
     public TagResponse create(TagRequest request) {
         TagEntity entity = mapper.requestToEntity(request);
         return mapper.entityToResponse(repository.save(entity));
     }
 
+    @Override
     public List<TagResponse> findAll() {
         return repository.findAll().stream().map(
                         mapper::entityToResponse)
@@ -32,21 +36,32 @@ public class TagService implements TagServiceInterface {
     }
 
     @Override
-    public Set<TagEntity> verifyTags(PostRequest request) {
-        /*
-            Method finds all tags from request by their name and saves into new set;
+    @Transactional
+    public void deleteById(UUID uuid) {
 
-            If size of the set is different from the request set, it means that used provided
-            unexisting tags in the request.
-         */
-        Set<TagRequest> tagsFromRequest = request.getTags();
+        Optional<TagEntity> opt = repository.findById(uuid);
+
+        TagEntity tag = opt.get();
+
+        tag.getPosts()
+                .forEach(post -> post.getTags().remove(tag));
+
+        repository.deleteById(uuid);
+
+    }
+
+    @Override
+    public List<TagEntity> verifyTags(PostRequest request) {
+
+        List<TagRequest> tagsFromRequest = request.getTags();
         List<String> nameOfTagsFromRequest = tagsFromRequest.stream()
                 .map(TagRequest::getName)
                 .toList();
 
-        Set<TagEntity> tags = repository.findTagEntitiesByNameIn(nameOfTagsFromRequest);
+        List<TagEntity> tags = repository.findTagEntitiesByNameIn(nameOfTagsFromRequest);
 
-        if(tags.size() != tagsFromRequest.size()) throw new IllegalArgumentException("Only existing tags can be assigned");
+        if (tags.size() != tagsFromRequest.size())
+            throw new IllegalArgumentException("Only existing tags can be assigned");
 
         return tags;
     }

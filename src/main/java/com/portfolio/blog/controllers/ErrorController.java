@@ -70,7 +70,7 @@ public class ErrorController {
 
         ApiErrorResponse response = ApiErrorResponse.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
-                .message(ex.getMessage())
+                .message(ex.getFieldError().getDefaultMessage())
                 .build();
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);

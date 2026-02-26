@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -24,6 +24,6 @@ public class TagEntity {
     private String name;
 
     @ManyToMany(mappedBy = "tags")
-    private Set<PostEntity> posts;
+    private List<PostEntity> posts;
 
 }

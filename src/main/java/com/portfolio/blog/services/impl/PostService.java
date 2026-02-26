@@ -29,6 +29,7 @@ public class PostService implements PostServiceInterface {
     private final TagServiceInterface tagService;
 
     @Override
+    @Transactional
     public List<PostResponse> findAll() {
 
         List<PostResponse> posts = repository.findAll()
@@ -36,7 +37,7 @@ public class PostService implements PostServiceInterface {
                 .map(mapper::entityToResponse)
                 .toList();
 
-        if(posts.isEmpty()) throw new EntityNotFoundException("Posts are not found");
+        if (posts.isEmpty()) throw new EntityNotFoundException("Posts are not found");
 
         return posts;
     }
@@ -46,7 +47,7 @@ public class PostService implements PostServiceInterface {
 
         Optional<PostEntity> post = repository.findById(id);
 
-        if(post.isEmpty() ) throw new EntityNotFoundException("Post is not found");
+        if (post.isEmpty()) throw new EntityNotFoundException("Post is not found");
 
         return mapper.entityToResponse(post.get());
     }
@@ -57,11 +58,9 @@ public class PostService implements PostServiceInterface {
         PostEntity postEntity = mapper.requestToEntity(request);
 
         postEntity.setAuthor(userService.extractUserFromSecurityContextHolder());
-
         postEntity.setReadingTime(postEntity.getContent().length() / 2);
-
         postEntity.setCategory(categoryService.verifyCategory(request));
-
+        postEntity.setTags(tagService.verifyTags(request));
 
         return mapper.entityToResponse(repository.save(postEntity));
     }
@@ -72,7 +71,7 @@ public class PostService implements PostServiceInterface {
     public PostResponse update(UUID uuid, PostRequest request) {
 
         Optional<PostEntity> toUpdate = repository.findById(uuid);
-        if(toUpdate.isEmpty())
+        if (toUpdate.isEmpty())
             throw new EntityNotFoundException("Post with ID  " + uuid + " does not exist");
         PostEntity postEntity = toUpdate.get();
 
@@ -91,14 +90,9 @@ public class PostService implements PostServiceInterface {
     }
 
     @Override
-    public void delete() {
-
+    public void delete(UUID uuid) {
+        repository.deleteById(uuid);
     }
-
-    public void deleteAll() {
-        repository.deleteAll();
-    }
-
 }
 
 

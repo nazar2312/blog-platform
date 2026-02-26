@@ -10,7 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @Builder
@@ -24,5 +24,5 @@ public class PostResponse {
     StatusEntity status;
     Integer readingTime;
     CategoryResponse category;
-    Set<TagResponse> tags;
+    List<TagResponse> tags;
 }

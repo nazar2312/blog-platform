@@ -10,7 +10,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
+import java.util.List;
 
 @Data
 @Builder
@@ -19,7 +19,7 @@ import java.util.Set;
 public class PostRequest {
 
     @NotBlank(message = "Title must contain at least two letters")
-    @Size(min = 2, max = 50, message = "Title must be the size of 1 to 50 letters")
+    @Size(min = 2, max = 50, message = "Title must be the size of 2 to 50 letters")
     @Pattern(regexp = "^[a-zA-Z ]+$", message = "Title must contain only letters")
     String title;
 
@@ -36,5 +36,5 @@ public class PostRequest {
 
     @NotEmpty(message = "Tags must be provided")
     @Valid
-    Set<TagRequest> tags;
+    List<TagRequest> tags;
 }
