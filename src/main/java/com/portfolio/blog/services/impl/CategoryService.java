@@ -42,7 +42,7 @@ public class CategoryService implements CategoryServiceInterface {
 
         Optional<CategoryEntity> category = repository.findById(id);
         
-        if(category.isEmpty()) throw new EntityNotFoundException();
+        if(category.isEmpty()) throw new EntityNotFoundException("Only existing categories can be viewed");
         
         return mapper.entityToResponse(category.get());
     }
@@ -78,7 +78,7 @@ public class CategoryService implements CategoryServiceInterface {
         if(name == null || name.isBlank()) throw new IllegalArgumentException("Please enter category name");
 
         Optional<CategoryEntity> category = repository.findByName(name);
-        if(category.isEmpty()) throw new EntityNotFoundException("Category is not verified");
+        if(category.isEmpty()) throw new EntityNotFoundException("Only existing category can be assigned to the post");
 
         return category.get();
     }

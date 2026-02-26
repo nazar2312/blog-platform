@@ -7,6 +7,7 @@ import com.portfolio.blog.domain.entities.TagEntity;
 import com.portfolio.blog.mappers.TagMapper;
 import com.portfolio.blog.repositories.TagRepository;
 import com.portfolio.blog.services.TagServiceInterface;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -61,7 +62,7 @@ public class TagService implements TagServiceInterface {
         List<TagEntity> tags = repository.findTagEntitiesByNameIn(nameOfTagsFromRequest);
 
         if (tags.size() != tagsFromRequest.size())
-            throw new IllegalArgumentException("Only existing tags can be assigned");
+            throw new EntityNotFoundException("Only existing tags can be assigned");
 
         return tags;
     }

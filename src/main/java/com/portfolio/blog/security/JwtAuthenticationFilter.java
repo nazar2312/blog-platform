@@ -35,13 +35,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             );
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
-        } catch (Exception ex) {
-            //unauthorized i guess
-            log.warn("Invalid/Expired token was received");
+        } catch (RuntimeException ex) {
+            //unauthorized
             log.warn(ex.getMessage());
         }
         filterChain.doFilter(request, response);
 
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+
+        String path = request.getServletPath();
+
+        return path.equals("/api/registration") ||
+                path.equals("/api/auth") ||
+                request.getMethod().equals("GET") && path.startsWith("/api/posts") ||
+                request.getMethod().equals("GET") && path.startsWith("/api/categories") ||
+                request.getMethod().equals("GET") && path.startsWith("/api/tags");
     }
 
 

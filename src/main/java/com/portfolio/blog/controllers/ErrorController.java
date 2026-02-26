@@ -1,11 +1,13 @@
 package com.portfolio.blog.controllers;
 
 import com.portfolio.blog.domain.dto.error.ApiErrorResponse;
+import io.jsonwebtoken.JwtException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,8 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class ErrorController {
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiErrorResponse> handleException(Exception ex) {
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<ApiErrorResponse> handleJwtException(JwtException ex) {
 
         log.error(ex.getMessage());
 
@@ -45,11 +47,16 @@ public class ErrorController {
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ApiErrorResponse> handleBadCredentials(BadCredentialsException ex) {
 
-        log.error(ex.getMessage());
+        Authentication request = ex.getAuthenticationRequest();
+        log.warn("Bad credentials received - authorization failed for user "
+                + "[ " + request.getName() + " ]"
+                + " with password "
+                + "[ " + request.getCredentials() + " ]"
+        );
 
         ApiErrorResponse response = ApiErrorResponse.builder()
                 .status(HttpStatus.UNAUTHORIZED.value())
-                .message(ex.getMessage())
+                .message("Incorrect password or username")
                 .build();
 
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
@@ -57,7 +64,8 @@ public class ErrorController {
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleEntityNotFound(EntityNotFoundException ex) {
 
-        log.error(ex.getMessage());
+        log.warn("| Exception (EntityNotFound) - handled | User received message - '" + ex.getMessage() + "' |");
+
         ApiErrorResponse response = ApiErrorResponse.builder()
                 .status(HttpStatus.NOT_FOUND.value())
                 .message(ex.getMessage())

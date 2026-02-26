@@ -3,6 +3,7 @@ package com.portfolio.blog.controllers;
 import com.portfolio.blog.domain.dto.registration.RegistrationRequest;
 import com.portfolio.blog.domain.dto.registration.RegistrationResponse;
 import com.portfolio.blog.services.RegistrationServiceInterface;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +20,7 @@ public class RegistrationController {
 
     @PostMapping
     public ResponseEntity<RegistrationResponse> requestToRegister(
-            @RequestBody RegistrationRequest request
+            @Valid @RequestBody RegistrationRequest request
             ) {
 
         registrationService.createUser(request);

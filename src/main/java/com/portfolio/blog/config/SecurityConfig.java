@@ -2,6 +2,7 @@ package com.portfolio.blog.config;
 
 import com.portfolio.blog.security.JwtAuthenticationFilter;
 import com.portfolio.blog.services.AuthenticationServiceInterface;
+import io.jsonwebtoken.JwtException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -25,22 +26,26 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
-            JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
+            JwtAuthenticationFilter jwtAuthenticationFilter) throws JwtException {
 
-        http
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/api/registration").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/posts/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/tags/**").permitAll()
-                        .anyRequest().authenticated()
-                )
-                .csrf(csrf -> csrf.disable())
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                ).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-        return http.build();
+        try {
+            http
+                    .authorizeHttpRequests(auth -> auth
+                            .requestMatchers(HttpMethod.POST, "/api/registration").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/api/auth").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/api/posts/**").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/api/tags/**").permitAll()
+                            .anyRequest().authenticated()
+                    )
+                    .csrf(csrf -> csrf.disable())
+                    .sessionManagement(session ->
+                            session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    ).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+            return http.build();
+        } catch (JwtException e) {
+            throw new JwtException("Security filter chain failed");
+        }
     }
 
     @Bean
